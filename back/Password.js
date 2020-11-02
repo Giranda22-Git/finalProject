@@ -1,9 +1,7 @@
 const passwordHash = require('password-hash')
-const Login = require('./Login.js')
 module.exports =
-class Password extends Login {
+class Password{
     constructor(password) {
-        super()
         if (passwordHash.isHashed(password))
             this._password = password
         else if (this.newPasswordValid(password))

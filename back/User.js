@@ -1,31 +1,20 @@
 const Login = require('./Login.js')
 const Password = require('./Password.js')
 module.exports =
-class User extends Password {
-    constructor(login, password, privilege) {
-        try {
-            super(password)
-            async () => {
-                await this.setLogin(login)
-                .then(() => {
-                    console.log(this.login, this.password)
-                    if ( !this.login || !this.password ) throw new Error("bad")
-                    this.privilege = privilege
-                })
-            }
-        }
-        catch(err) {
-            console.log(err)
-        }
+class User{
+    constructor(login, password, privilege = 'user') {
+        this.Password = new Password(password)
+        this.Login = new Login(login)
+        this.privilege = privilege
     }
 
-    get getUser () {
+    get User () {
         return {'Login': this.Login, 'Password': this.Password}
     }
 
-    set setUser (user) {
-        this.Login = new Login(user.login)
+    set User (user) {
         this.Password = new Password(user.password)
+        this.privilege = user.privilege
     }
 
     static toUser (user) {

@@ -1,6 +1,20 @@
 const mongoose = require('mongoose')
 const users = new mongoose.Schema({
-    userData: mongoose.Schema.Types.Mixed,
+    userData: {
+        Login: {
+            type: mongoose.Schema.Types.Mixed,
+            required: true,
+            unique: true
+        },
+        Password: {
+            type: mongoose.Schema.Types.Mixed,
+            required: true
+        },
+        privilege: {
+            type: String,
+            required: true
+        }
+    },
     status: String
 })
 

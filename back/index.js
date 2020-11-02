@@ -40,8 +40,6 @@ async function init(serverData) {
         })
         app.get('/', async (req, res) => {
             const result = await mongoUser.find().exec()
-            const user = User.toUser(result[0].userData)
-            console.log(user.Password.passwordVerify('garganzola25'))
             res.send( JSON.stringify(result) )
         })
 

@@ -3,12 +3,14 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const multer = require('multer')
+const wss = require('ws')
 
 const User = require('./User.js')
-console.log(new User('Giranda22', 'newPassword'))
+//import mongoFreshAuction from './FreshAuctions.js'
+const mongoUser = require('./Users.js').mongoUser
 
 const serverData = {
-    mongoUrl: 'mongodb://localhost:27017/finalProject',
+    mongoUrl: 'mongodb://127.0.0.1:27017/finalProject',
     serverUrl: 'http://localhost:3000/',
     PORT: 3000
 }
@@ -17,6 +19,10 @@ const app = express()
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use((req, res, next) => {
+    res.contentType('application/json')
+    next()
+})
 app.use(cors())
 
 init(serverData)
@@ -27,52 +33,25 @@ async function init(serverData) {
         useUnifiedTopology: true
     })
     
-    mongoose.connection.on('error', (error) => console.log(error))
-    
-    mongoose.connection.on('connected', () => {
+    mongoose.connection.once('open', () => {
         app.listen(serverData.PORT, (err) => {
             if (err) return new Error(`error in starting server, error: ${err}`)
             else console.log(`server started on \nPORT: ${serverData.PORT}\nURL: ${serverData.serverUrl}`)
         })
-        app.get('/', (req, res) => {
-            const login = new Login('Giranda22')
-            console.log(login)
-            res.send( JSON.stringify(login) )
+        app.get('/', async (req, res) => {
+            const result = await mongoUser.find().exec()
+            const user = User.toUser(result[0].userData)
+            console.log(user.Password.passwordVerify('garganzola25'))
+            res.send( JSON.stringify(result) )
+        })
+
+        app.post('/create/user', async (req, res) => {
+            const newUser = new mongoUser({
+                userData: User.toUser(req.body.user)
+            })
+            const result = await newUser.save()
+            res.status(200).send( JSON.stringify( result ) )
         })
     })
-    mongoose.connection.emit('connected')
-    mongoose.connection.emit('error')
-
-    
-
-    const User = new mongoose.Schema({
-        login: String,
-        password: String
-    })
-
-
-    const freshAuctions = new mongoose.Schema({
-        title: String,
-        text: String,
-        objectName: String,
-        startTime: Date,
-        endTime: Date,
-        images: Array,
-        startedPrice: Number,
-        currentPrice: Number,
-        startedPriceForStep: Number,
-        currentPriceForStep: Number,
-        like: Number,
-        messages: Array,
-        owner: String,
-        participants: Array
-    })
-
-    const freshAuction = mongoose.model('freshAuction', freshAuctions)
-
-    
-
-
-
-    mongoose.connection.close()
+    mongoose.connection.emit('open')
 }

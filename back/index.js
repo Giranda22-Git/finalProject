@@ -6,11 +6,11 @@ const multer = require('multer')
 const wss = require('ws')
 
 const User = require('./User.js')
-//import mongoFreshAuction from './FreshAuctions.js'
+const mongoFreshAuction = require('./FreshAuctions.js').mongoFreshAuction
 const mongoUser = require('./Users.js').mongoUser
 
 const serverData = {
-    mongoUrl: 'mongodb://127.0.0.1:27017/finalProject',
+    mongoUrl: 'mongodb://192.168.110.181:27017/finalProject',
     serverUrl: 'http://localhost:3000/',
     PORT: 3000
 }

@@ -14,8 +14,7 @@ const users = new mongoose.Schema({
             type: String,
             required: true
         }
-    },
-    status: String
+    }
 })
 
 const mongoUser = mongoose.model('users', users)

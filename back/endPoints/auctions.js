@@ -3,13 +3,14 @@ const router = express.Router()
 
 const fs = require('fs')
 const multer = require('multer')
-const upload = multer({dest: 'tmp/'})
+const upload = multer({dest: './tmp/'})
 const tmpDir = __dirname + 'tmp/'
 const uploadDir = __dirname + 'public/uploads'
 
 const mongoFreshAuction = require('../models/FreshAuctions.js').mongoFreshAuction
 const mongoUser = require('../models/Users.js').mongoUser
 const log = require('../objects/log.js')
+const User = require('../objects/User.js')
 
 router.get('/', async (req, res) => {
     const result = await mongoFreshAuction.find().exec()
@@ -81,11 +82,44 @@ router.post('/', upload.array('images', 15), async (req, res) => {
 router.put('/like', async (req, res) => {
     if (await mongoUser.findById(req.body.owner).exec() && !await mongoFreshAuction.findById(req.body.owner).exec().like.includes(req.body.liker))
     {
-        const result = await mongoFreshAuction.findByIdAndUpdate(req.body.owner, { $push: { like: req.body.liker } }, (err) => {
+        const result = await mongoFreshAuction.findOneAndUpdate({owner: req.body.owner}, { $push: { like: req.body.liker } }, (err) => {
             if (err) res.sendStatus(500)
         })
         res.status(200).json( result )
     } else res.sendStatus(500)
 })
+
+router.put('/step', async (req, res) => {
+    const data = req.body
+    const user = User.toUser(await mongoUser.findById(data.owner).exec())
+    const result = await mongoFreshAuction.findOneAndUpdate({owner: data.owner}, 
+        { $inc: {
+            currentPrice: data.step,
+            currentPriceForStep: data.step / 10
+        }, $push: {
+            log: new log(user.Login.login, 'has buy step for lot')
+        }}, err => {
+        if (err) res.sendStatus(500)
+    })
+    res.status(200).json(result)
+})
+
+router.put('/status', async (req, res) => {
+    const result = await mongoFreshAuction.findOneAndUpdate({owner: req.body.owner}, {$set: {status: req.body.status}}, err => {
+        if (err) res.sendStatus(500)
+    })
+    res.status(200).json(result)
+})
+
+router.put('/participants', async (req, res) => {
+    const result = await mongoFreshAuction.findOneAndUpdate({owner: req.body.owner}, {$push: {participants: req.body.participant}}, err => {
+        res.sendStatus(500)
+    })
+    res.status(200).json(result)
+})
+
+function delBadFile(fileName) {
+  fs.unlinkSync(tmpDir + '/' + fileName)
+}
 
 module.exports = router

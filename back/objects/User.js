@@ -18,6 +18,7 @@ class User{
     }
 
     static toUser (user) {
+        console.log(user)
         return new User(
             typeof user.Login !== "undefined" ? user.Login.login : user.login,
             typeof user.Password !== "undefined" ? user.Password.password : user.password,

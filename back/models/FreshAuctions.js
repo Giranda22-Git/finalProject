@@ -6,7 +6,7 @@ const freshAuctions = new mongoose.Schema({
         min: 6,
         max: 128
     },
-    text: {
+    description: {
         type: String,
         required: true,
         min: 15,
@@ -57,10 +57,8 @@ const freshAuctions = new mongoose.Schema({
         max: Infinity
     },
     like: {
-        type: Number,
-        required: true,
-        min: 100,
-        max: Infinity
+        type: Array,
+        required: true
     },
     messages: {
         type: Array,
@@ -78,7 +76,8 @@ const freshAuctions = new mongoose.Schema({
     status: {
         type: String,
         enum: ['created', 'inprogress', 'finished ']
-    }
+    },
+    log: [Object]
 })
 
 const mongoFreshAuction = mongoose.model('freshAuction', freshAuctions)

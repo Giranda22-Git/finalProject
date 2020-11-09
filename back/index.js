@@ -5,12 +5,12 @@ const cors = require('cors')
 const multer = require('multer')
 const wss = require('ws')
 
-const User = require('./User.js')
-const mongoFreshAuction = require('./FreshAuctions.js').mongoFreshAuction
-const mongoUser = require('./Users.js').mongoUser
+const User = require('./objects/User.js')
+const mongoFreshAuction = require('./models/FreshAuctions.js').mongoFreshAuction
+const mongoUser = require('./models/Users.js').mongoUser
 
 const serverData = {
-    mongoUrl: 'mongodb://192.168.110.181:27017/finalProject',
+    mongoUrl: 'mongodb://localhost:27017/finalProject',
     serverUrl: 'http://localhost:3000/',
     PORT: 3000
 }
@@ -38,18 +38,11 @@ async function init(serverData) {
             if (err) return new Error(`error in starting server, error: ${err}`)
             else console.log(`server started on \nPORT: ${serverData.PORT}\nURL: ${serverData.serverUrl}`)
         })
-        app.get('/', async (req, res) => {
-            const result = await mongoUser.find().exec()
-            res.send( JSON.stringify(result) )
-        })
 
-        app.post('/create/user', async (req, res) => {
-            const newUser = new mongoUser({
-                userData: User.toUser(req.body.user)
-            })
-            const result = await newUser.save()
-            res.status(200).send( JSON.stringify( result ) )
-        })
+        app.use('/users', require('./endPoints/users.js'))
+        app.use('/auctions', require('./endPoints/auctions.js'))
+
+        
     })
     mongoose.connection.emit('open')
 }

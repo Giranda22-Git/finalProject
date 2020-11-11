@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
-    <input type="text" v-model="login" class="login">
-    <input type="password" v-model="password" class="password" @keypress.enter="autorization">
+    <input type="text" v-model="login" class="login" placeholder="  Login">
+    <input type="password" v-model="password" class="password" @keypress.enter="autorization" placeholder="   Password">
     <button @click="autorization" @keypress.enter="autorization">Send</button>
   </div>
 </template>
@@ -47,13 +47,10 @@ export default {
   .wrapper
     width: 100%
     height: 100vh
-    display: flex
-    flex-direction: column
-    justify-content: space-evenly
-    align-items: center
     & *
-      width: 50%
+      width: 100%
       height: 8%
       font-size: 2rem
       text-align: center
+      margin-top: 10%
 </style>

@@ -1,8 +1,8 @@
 <template>
   <div class="wrapper">
-    <input type="text" v-model="login" class="login">
-    <input type="password" v-model="password" class="password">
-    <input type="password" v-model="checkPassword" class="checkPassword" @keypress.enter="sendUserData">
+    <input type="text" v-model="login" class="login" placeholder="  Login">
+    <input type="password" v-model="password" class="password" placeholder="  Password">
+    <input type="password" v-model="checkPassword" class="checkPassword" @keypress.enter="sendUserData" placeholder=" repeat Password">
     <button @click="sendUserData" @keypress.enter="sendUserData">Send</button>
   </div>
 </template>
@@ -58,13 +58,10 @@ export default {
   .wrapper
     width: 100%
     height: 100vh
-    display: flex
-    flex-direction: column
-    justify-content: space-evenly
-    align-items: center
     & *
-      width: 50%
+      width: 100%
       height: 8%
       font-size: 2rem
       text-align: center
+      margin-top: 10%
 </style>

@@ -16,6 +16,12 @@ export default {
     login: null,
     password: null
   }),
+  props: {
+    authProp: {
+      type: String,
+      default: 'translateX(100vw) translateZ(100vw) rotateX(100deg)'
+    }
+  },
   methods: {
     async autorization () {
       const params = {
@@ -42,11 +48,9 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-  *
-    outline: 1px solid red
   .wrapper
     width: 100%
-    height: 100vh
+    height: 100%
     & *
       width: 100%
       height: 8%

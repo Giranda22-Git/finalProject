@@ -1,13 +1,19 @@
 <template>
   <div class="home">
-    <div class="formWrapper" v-show="isModalVisible">
-      <div class="toggleLabel" ref="toggleLabel">
-        <button class="switchRegistration" @click="switchRegistration" >Registration</button>
-        <button class="switchAutorization" @click="switchAutorization" >Autorization</button>
+    <div class="Modal" v-show="isModalVisible">
+      <div class="rightClick" @click="moveOnRight"></div>
+      <div class="leftClick" @click="moveOnLeft"></div>
+      <div class="formWrapper" ref="cube">
+        <autorization class="auth left side" @click="switchRegistration" />
+        <registration class="reg front side" />
+        <div class="top side"></div>
+        <div class="bottom side"></div>
+        <div class="back side" ></div>
+        <div class="right side"></div>
       </div>
-      <autorization class="auth" ref="auth" />
-      <registration class="reg" ref="reg" />
     </div>
+    <navigation />
+    <aboutUs />
   </div>
 </template>
 
@@ -15,88 +21,87 @@
 
 import registration from '../components/registration'
 import autorization from '../components/autorization'
+import navigation from '../components/navigation'
+import aboutUs from '../components/aboutUs'
 
 export default {
   name: 'Home',
   components: {
     registration,
-    autorization
+    autorization,
+    navigation,
+    aboutUs
   },
   data: () => ({
-    isRegisterToggle: true,
-    isModalVisible: true
+    isModalVisible: false,
+    rotate: 45
   }),
   methods: {
     switchRegistration () {
-      this.isRegisterToggle = true
-      this.translateToggleLine(true)
-      this.$refs.reg.style.transform = 'translateX(-100vw) translateZ(-100vw) rotateX(-100deg)'
+      this.$refs.cube.style.transform = 'rotateY(0deg)'
     },
     switchAutorization () {
-      this.isRegisterToggle = false
-      this.translateToggleLine(false)
-      this.$refs.auth.style.transform = 'translateX(0) translateZ(0) rotateX(0)'
+      this.$refs.cube.style.transform = 'rotateY(180deg)'
     },
-    translateToggleLine (toggle) {
-      if (toggle) this.$refs.toggleLabel.classList.remove('translateToggleLine')
-      else this.$refs.toggleLabel.classList.add('translateToggleLine')
-      console.log(this.$refs.toggleLabel)
+    moveOnRight () {
+      this.$refs.cube.style.transform = `rotateY(${this.rotate = this.rotate + -45}deg)`
+    },
+    moveOnLeft () {
+      this.$refs.cube.style.transform = `rotateY(${this.rotate = this.rotate + 45}deg)`
     }
   }
 }
 </script>
 
 <style lang="sass" scoped>
-  .translateToggleLine
-    &:before
-      transform: translateX(100%)
   .home
     min-height: 100vh !important
-    display: flex
-    justify-content: center
-    align-items: center
-    .formWrapper
-      width: 50%
+    background-color: #000
+    .rightClick
+      width: calc( 100vw / 2 - 400px / 2 )
       height: 100%
+      position: fixed
+      right: 0
+      top: 0
+    .leftClick
+      width: calc( 100vw / 2 - 400px / 2 )
+      height: 100%
+      position: fixed
+      left: 0
+      top: 0
+    .Modal
+      min-height: 100vh
+      width: 100vw
+      display: flex
+      flex-direction: column
+      justify-content: center
+      align-items: center
+      position: fixed
+      perspective: 500px
+    .formWrapper
+      width: 400px
+      height: 400px
       transform-style: preserve-3d
-      perspective: 1000px
-      position: relative
-      .reg
-        transform: translateX(0) translateZ(0) rotateX(0)
-        transition: 2s
-        position: absolute
-      .auth
-        transform: translateX(100vw) translateZ(100vw) rotateX(100deg)
-        transition: 2s
-        position: absolute
-      .toggleLabel
+      transition: 1s
+      transform: rotateY(45deg)
+      .side
         position: absolute
         width: 100%
-        height: 15%
-        display: flex
-        justify-content: center
-        align-items: center
-        position: relative
-        &:before
-          content: ''
-          position: absolute
-          bottom: 0
-          left: 0
-          width: 50%
-          height: 1px
-          outline: 1px solid silver
-          transition: .5s
-        & button
-          width: 50%
-          height: 50%
-          text-align: center
-          font-size: 2.5rem
-          background-color: transparent
-          outline: none
-          border: none
-          cursor: pointer
-          color: black !important
-          transition: color .25s
-          &:hover
-            color: darken(lightblue, 50%) !important
+        height: 100%
+        border: 1px solid #fff
+        font-size: 4rem
+        text-align: center
+        color: white
+      .front
+        transform: translateZ(250px)
+      .back
+        transform: rotateY(180deg) translateZ(250px)
+      .right
+        transform: rotateY(90deg) translateZ(250px)
+      .left
+        transform: rotateY(-90deg) translateZ(250px)
+      .top
+        transform: rotateX(90deg) translateZ(250px)
+      .bottom
+        transform: rotateX(-90deg) translateZ(250px)
 </style>

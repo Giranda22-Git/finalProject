@@ -10,7 +10,8 @@
 }
 html {
   font-size: 14px;
-  font-family: 'sans-serif'
+  font-family: sans-serif;
+  overflow: hidden;
 }
 body {
   margin: 0;

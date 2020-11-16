@@ -53,11 +53,9 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-  *
-    outline: 1px solid red
   .wrapper
     width: 100%
-    height: 100vh
+    height: 100%
     & *
       width: 100%
       height: 8%

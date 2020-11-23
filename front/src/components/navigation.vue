@@ -57,7 +57,7 @@
         <div class="front"></div>
         <div class="back"></div>
       </div>
-      <div class="menuItem" id="Auctions" @mouseenter="pushBack('Auctions')">
+      <div class="menuItem" @click="switchAuctions" id="Auctions" @mouseenter="pushBack('Auctions')">
         <div class="left"></div>
         <div class="right"></div>
         <div class="top"></div>
@@ -97,6 +97,9 @@ export default {
       }, () => {
         $(`#${selector}`).css({ transform: 'translateZ(0px)' })
       })
+    },
+    switchAuctions () {
+      this.$emit('switchAuctions')
     }
   }
 }

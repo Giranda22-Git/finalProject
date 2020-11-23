@@ -12,29 +12,32 @@
         <div class="right side"></div>
       </div>
     </div>
-    <navigation />
-    <aboutUs />
+    <navigation @switchAuctions="switchAuctions" />
+    <aboutUs id="aboutUs" v-show="true" />
+    <auctions id="auctions" class="auctions" />
   </div>
 </template>
 
 <script>
-
 import registration from '../components/registration'
 import autorization from '../components/autorization'
 import navigation from '../components/navigation'
 import aboutUs from '../components/aboutUs'
-
+import auctions from '../components/Auctions'
+import anime from 'animejs'
 export default {
   name: 'Home',
   components: {
     registration,
     autorization,
     navigation,
-    aboutUs
+    aboutUs,
+    auctions
   },
   data: () => ({
     isModalVisible: false,
-    rotate: 45
+    rotate: 45,
+    currentPage: 'aboutUs'
   }),
   methods: {
     switchRegistration () {
@@ -48,6 +51,35 @@ export default {
     },
     moveOnLeft () {
       this.$refs.cube.style.transform = `rotateY(${this.rotate = this.rotate + 45}deg)`
+    },
+    switchAuctions () {
+      const anim = anime({
+        targets: `#${this.currentPage}`,
+        duration: 3000,
+        easing: 'linear',
+        keyframes: [
+          {
+            duration: 1000,
+            scale: 0.3,
+            easing: 'linear',
+            translateY: '-250vh'
+          },
+          {
+            duration: 1,
+            scale: 1,
+            translateX: '100%'
+          },
+          {
+            duration: 1,
+            translateY: '100%'
+          },
+          {
+            duration: 1,
+            translateX: 0
+          }
+        ]
+      })
+      console.log(anim)
     }
   }
 }
@@ -57,6 +89,8 @@ export default {
   .home
     min-height: 100vh !important
     background-color: #000
+    #auctions
+      transform: translateY(100%)
     .rightClick
       width: calc( 100vw / 2 - 400px / 2 )
       height: 100%
@@ -104,4 +138,11 @@ export default {
         transform: rotateX(90deg) translateZ(250px)
       .bottom
         transform: rotateX(-90deg) translateZ(250px)
+  @keyframes change
+    50%
+      transition: 1s
+      transform: translateY(-100%) scale(0.3)
+    100%
+      transition: none
+      transform: translateY(100%) scale(1)
 </style>

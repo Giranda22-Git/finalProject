@@ -41,8 +41,6 @@ async function init(serverData) {
 
         app.use('/users', require('./endPoints/users.js'))
         app.use('/auctions', require('./endPoints/auctions.js'))
-
-        
     })
     mongoose.connection.emit('open')
 }

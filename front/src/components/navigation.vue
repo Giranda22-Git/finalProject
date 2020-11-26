@@ -9,7 +9,7 @@
         <div class="front"></div>
         <div class="back"></div>
       </div>
-      <div class="menuItem" id="AboutUs" @mouseenter="pushBack('AboutUs')">
+      <div class="menuItem" id="AboutUs" @click="switchPage('aboutUs')" @mouseenter="pushBack('AboutUs')">
         <div class="left"></div>
         <div class="right"></div>
         <div class="top"></div>
@@ -25,7 +25,7 @@
         <div class="front"></div>
         <div class="back"></div>
       </div>
-      <div class="menuItem" id="Contacts" @mouseenter="pushBack('Contacts')">
+      <div class="menuItem" id="Contacts" @click="switchPage('Contacts')" @mouseenter="pushBack('Contacts')">
         <div class="left"></div>
         <div class="right"></div>
         <div class="top"></div>
@@ -41,7 +41,7 @@
         <div class="front"></div>
         <div class="back"></div>
       </div>
-      <div class="menuItem" id="PersonArea" @mouseenter="pushBack('PersonArea')">
+      <div class="menuItem" id="PersonArea" @click="switchPage('personArea')" @mouseenter="pushBack('PersonArea')">
         <div class="left"></div>
         <div class="right"></div>
         <div class="top"></div>
@@ -57,7 +57,7 @@
         <div class="front"></div>
         <div class="back"></div>
       </div>
-      <div class="menuItem" @click="switchAuctions" id="Auctions" @mouseenter="pushBack('Auctions')">
+      <div class="menuItem" @click="switchPage('auctions')" id="Auctions" @mouseenter="pushBack('Auctions')">
         <div class="left"></div>
         <div class="right"></div>
         <div class="top"></div>
@@ -98,8 +98,8 @@ export default {
         $(`#${selector}`).css({ transform: 'translateZ(0px)' })
       })
     },
-    switchAuctions () {
-      this.$emit('switchAuctions')
+    switchPage (obj) {
+      this.$emit('switchPage', obj)
     }
   }
 }
@@ -116,6 +116,8 @@ export default {
     perspective: 300px
     transform: rotateX(30deg)
     transform-style: preserve-3d
+    position: relative
+    z-index: 1000000
     .partitionWrapper
       width: 95%
       height: 50px

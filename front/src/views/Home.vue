@@ -12,7 +12,7 @@
         <div class="right side"></div>
       </div>
     </div>
-    <navigation @switchAuctions="switchAuctions" />
+    <navigation @switchPage="switchPage" />
     <aboutUs id="aboutUs" v-show="true" />
     <auctions id="auctions" class="auctions" />
   </div>
@@ -52,34 +52,43 @@ export default {
     moveOnLeft () {
       this.$refs.cube.style.transform = `rotateY(${this.rotate = this.rotate + 45}deg)`
     },
-    switchAuctions () {
-      const anim = anime({
-        targets: `#${this.currentPage}`,
-        duration: 3000,
-        easing: 'linear',
-        keyframes: [
-          {
-            duration: 1000,
-            scale: 0.3,
-            easing: 'linear',
-            translateY: '-250vh'
-          },
-          {
-            duration: 1,
-            scale: 1,
-            translateX: '100%'
-          },
-          {
-            duration: 1,
-            translateY: '100%'
-          },
-          {
-            duration: 1,
-            translateX: 0
-          }
-        ]
-      })
-      console.log(anim)
+    switchPage (nextPage) {
+      if (this.currentPage !== nextPage) {
+        anime({
+          targets: `#${this.currentPage}`,
+          duration: 3000,
+          easing: 'linear',
+          keyframes: [
+            {
+              duration: 1000,
+              scale: 0.3,
+              easing: 'linear',
+              translateY: '-250vh'
+            },
+            {
+              duration: 1,
+              scale: 1,
+              translateX: '100%'
+            },
+            {
+              duration: 1,
+              translateY: '100%'
+            },
+            {
+              duration: 1,
+              translateX: 0
+            }
+          ]
+        })
+
+        this.currentPage = nextPage
+        anime({
+          targets: `#${this.currentPage}`,
+          duration: 600,
+          easing: 'linear',
+          translateY: '-100%'
+        })
+      }
     }
   }
 }
@@ -138,11 +147,4 @@ export default {
         transform: rotateX(90deg) translateZ(250px)
       .bottom
         transform: rotateX(-90deg) translateZ(250px)
-  @keyframes change
-    50%
-      transition: 1s
-      transform: translateY(-100%) scale(0.3)
-    100%
-      transition: none
-      transform: translateY(100%) scale(1)
 </style>

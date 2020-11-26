@@ -10,6 +10,7 @@
 import auctionTile from '@/components/auctionTile.vue'
 
 export default {
+  name: 'Auctions',
   components: {
     auctionTile
   }

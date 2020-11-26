@@ -17,7 +17,6 @@ export default {
 
 <style lang="sass" scoped>
   .wrapper
-    border: 1px solid rgba(255, 255, 255, 0.3)
     .img
       width: 100%
       height: 40%
@@ -33,6 +32,8 @@ export default {
       overflow-y: auto
       font-size: 2rem
       padding: 3%
+      &::-webkit-scrollbar
+          width: 0px
     .button
       width: 100%
       height: 15%

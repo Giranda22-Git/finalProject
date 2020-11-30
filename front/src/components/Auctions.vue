@@ -56,7 +56,7 @@ export default {
           transition: opacity 1s
           position: absolute
           content: ""
-          z-index: 1
+          z-index: -1
           top: calc(-1 * 3px)
           left: calc(-1 * 3px)
           z-index: -1
@@ -71,6 +71,7 @@ export default {
           animation: moveGradient 4s alternate infinite
         &:hover
           transform: translateZ(60px)
+          z-index: -1
   @keyframes moveGradient
     50%
       background-position: 100% 50%

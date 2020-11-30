@@ -13,8 +13,8 @@
       </div>
     </div>
     <navigation @switchPage="switchPage" />
-    <aboutUs id="aboutUs" v-show="true" />
-    <auctions id="auctions" class="auctions" />
+    <aboutUs id="aboutUs" v-show="true" ref="aboutUs" />
+    <auctions id="auctions" class="auctions" ref="auctions" />
   </div>
 </template>
 
@@ -37,8 +37,29 @@ export default {
   data: () => ({
     isModalVisible: false,
     rotate: 45,
-    currentPage: 'aboutUs'
+    currentPage: 'aboutUs',
+    inAnimation: false,
+    aboutUsPos: {
+      x: '0%',
+      y: '0%'
+    },
+    contactsPos: {
+      x: '0%',
+      y: '100%'
+    },
+    personalAreaPos: {
+      x: '0%',
+      y: '100%'
+    },
+    auctionsPos: {
+      x: '0%',
+      y: '100%'
+    }
   }),
+  mounted () {
+    this.$refs.aboutUs.$el.style.transform = `translateX(${this.aboutUsPos.x}) translateY(${this.aboutUsPos.y})`
+    this.$refs.auctions.$el.style.transform = `translateX(${this.auctionsPos.x}) translateY(${this.auctionsPos.y})`
+  },
   methods: {
     switchRegistration () {
       this.$refs.cube.style.transform = 'rotateY(0deg)'
@@ -53,17 +74,17 @@ export default {
       this.$refs.cube.style.transform = `rotateY(${this.rotate = this.rotate + 45}deg)`
     },
     switchPage (nextPage) {
-      if (this.currentPage !== nextPage) {
+      if (this.currentPage !== nextPage && !this.inAnimation) {
+        const slideToTop = '-250vh'
         anime({
           targets: `#${this.currentPage}`,
-          duration: 3000,
           easing: 'linear',
           keyframes: [
             {
               duration: 1000,
               scale: 0.3,
               easing: 'linear',
-              translateY: '-250vh'
+              translateY: [this[`${this.currentPage}Pos`].y, slideToTop]
             },
             {
               duration: 1,
@@ -80,15 +101,28 @@ export default {
             }
           ]
         })
+        // switch first element Position
+        this[`${this.currentPage}Pos`].y = '100%'
 
+        // switch currentPage element
         this.currentPage = nextPage
         anime({
           targets: `#${this.currentPage}`,
-          duration: 600,
+          duration: 500,
           easing: 'linear',
-          translateY: '-100%'
+          translateY: [this[`${this.currentPage}Pos`].y, this.currentPage === 'aboutUs' ? '0%' : '-100%']
         })
+        // switch second element Position
+        if (this.currentPage === 'aboutUs') this[`${this.currentPage}Pos`].y = '0%'
+        else this[`${this.currentPage}Pos`].y = '-100%'
+
+        // disable next animation if current animation no finished
+        this.inAnimation = true
+        setTimeout(this.onTimeOut, 1200)
       }
+    },
+    onTimeOut () {
+      this.inAnimation = false
     }
   }
 }
@@ -98,8 +132,6 @@ export default {
   .home
     min-height: 100vh !important
     background-color: #000
-    #auctions
-      transform: translateY(100%)
     .rightClick
       width: calc( 100vw / 2 - 400px / 2 )
       height: 100%

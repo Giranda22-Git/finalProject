@@ -25,7 +25,7 @@
         <div class="front"></div>
         <div class="back"></div>
       </div>
-      <div class="menuItem" id="Contacts" @click="switchPage('Contacts')" @mouseenter="pushBack('Contacts')">
+      <div class="menuItem" id="Contacts" @click="switchPage('contacts')" @mouseenter="pushBack('Contacts')">
         <div class="left"></div>
         <div class="right"></div>
         <div class="top"></div>
@@ -41,7 +41,7 @@
         <div class="front"></div>
         <div class="back"></div>
       </div>
-      <div class="menuItem" id="PersonArea" @click="switchPage('personArea')" @mouseenter="pushBack('PersonArea')">
+      <div class="menuItem" id="PersonArea" @click="switchPage('personalArea')" @mouseenter="pushBack('PersonArea')">
         <div class="left"></div>
         <div class="right"></div>
         <div class="top"></div>

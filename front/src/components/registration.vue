@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
-    <input type="text" v-model="login" class="login" placeholder="  Login">
-    <input type="password" v-model="password" class="password" placeholder="  Password">
+    <input type="text" v-model="login" class="login" placeholder="Login">
+    <input type="password" v-model="password" class="password" placeholder="Password">
     <input type="password" v-model="checkPassword" class="checkPassword" @keypress.enter="sendUserData" placeholder=" repeat Password">
     <button @click="sendUserData" @keypress.enter="sendUserData">Send</button>
   </div>
@@ -29,7 +29,16 @@ export default {
         }
         axios.post('http://localhost:3000/users', params)
           .then(response => {
-            console.log('response', response)
+            localStorage.setItem('userData', JSON.stringify(response.data))
+            sweetalert2.fire({
+              title: 'OK',
+              text: `Добро пожаловать ${response.data.userData.Login._login}`,
+              icon: 'success',
+              confirmButtonText: 'OK'
+            })
+              .then(() => {
+                this.$emit('close')
+              })
           })
           .catch(err => {
             sweetalert2.fire({

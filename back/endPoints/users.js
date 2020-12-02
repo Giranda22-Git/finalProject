@@ -13,12 +13,13 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const newUser = new mongoUser({
-            userData: User.toUser(req.body.user)
+            userData: User.toUserReg(req.body.user)
         })
         const result = await newUser.save()
         res.status(200).send( JSON.stringify( result ) )
     }
     catch(err) {
+        console.log(err);
         res.sendStatus(500)
     }
 })
@@ -45,11 +46,13 @@ router.get('/login/:login', async (req, res) => {
 
 router.post('/autorization', async (req, res) => {
     try {
-        const user = User.toUser(await mongoUser.findOne({'Login._login': req.body.user.login}).exec())
+        const user = User.toUser(await mongoUser.findOne({'userData.Login._login': req.body.user.login}).exec())
         const result = user.Password.passwordVerify(req.body.user.password)
-        res.status(200).send(result)
+        if (!result) res.sendStatus(500)
+        res.status(200).send(user)
     }
     catch(err) {
+        console.log(err)
         res.sendStatus(500)
     }
 })

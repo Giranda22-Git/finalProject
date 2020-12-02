@@ -1,7 +1,12 @@
 <template>
   <div class="wrapper">
     <div class="background3D">
-      <auctionTile ref="Tile1" @click="modalTile" class="Tile" />
+      <auctionTile ref="Tile" class="Tile" @click="modalTile" />
+      <auctionTile ref="Tile" class="Tile" />
+      <auctionTile ref="Tile" class="Tile" />
+      <auctionTile ref="Tile" class="Tile" />
+      <auctionTile ref="Tile" class="Tile" />
+      <auctionTile ref="Tile" class="Tile" />
     </div>
   </div>
 </template>
@@ -16,7 +21,6 @@ export default {
   },
   methods: {
     modalTile () {
-      this.$refs.Tile1.transform = 'translateZ(200px) rotateX(0deg)'
     }
   }
 }
@@ -40,17 +44,21 @@ export default {
       padding: 2%
       text-align: justify
       transform-style: preserve-3d
+      display: flex
+      flex-wrap: wrap
+      justify-content: space-between
+      align-items: center
       &::-webkit-scrollbar
         width: 0rem
       .Tile
-        width: 33.3333333%
+        width: 32%
         height: 50%
         transition: 1s
         cursor: pointer
         position: relative
-        background: #222
         border-radius: 3px
         z-index: 2 !important
+        margin-bottom: 1%
         &::after
           opacity: 0
           transition: opacity 1s

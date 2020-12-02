@@ -17,6 +17,7 @@ export default {
 
 <style lang="sass" scoped>
   .wrapper
+    background-color: #252525;
     .img
       width: 100%
       height: 40%

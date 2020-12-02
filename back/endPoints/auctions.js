@@ -2,10 +2,11 @@ const express = require('express')
 const router = express.Router()
 
 const fs = require('fs')
+
+const tmpDir = __dirname + '/tmp/'
+const uploadDir = __dirname + '/uploads/'
 const multer = require('multer')
-const upload = multer({dest: './tmp/'})
-const tmpDir = __dirname + 'tmp/'
-const uploadDir = __dirname + 'public/uploads'
+const upload = multer({dest: './endPoints/tmp/'})
 
 const mongoFreshAuction = require('../models/FreshAuctions.js').mongoFreshAuction
 const mongoUser = require('../models/Users.js').mongoUser
@@ -17,8 +18,8 @@ router.get('/', async (req, res) => {
     res.status(200).send( JSON.stringify(result) )
 })
 
-router.post('/', upload.array('images', 15), async (req, res) => {
-    const files = req.images
+router.post('/', upload.array('files', 15), async (req, res) => {
+    const files = req.files
     const data = req.body
     const validTypes = ['svg+xml', 'png', 'gif', 'jpeg']
     const images = new Array
@@ -41,13 +42,8 @@ router.post('/', upload.array('images', 15), async (req, res) => {
             })
         }
         if (validTypes.includes(fileType[1])) {
-            fs.renameSync(tmpDir + '/' + file.filename, uploadDir + '/' + data.owner + index++)
-            images.push(data.owner + index - 1)
-            res.status(200).json({
-                type: 'success',
-                message: 'Изображения загружено',
-                path: '/uploads/' + data.owner + index - 1
-            })
+            fs.renameSync(tmpDir + file.filename, uploadDir + data.owner + index++ + file.originalname)
+            images.push(uploadDir + data.owner + String(index - 1) + file.originalname)
         } else {
             delBadFile(file.filename)
             res.status(500).json({
@@ -56,11 +52,10 @@ router.post('/', upload.array('images', 15), async (req, res) => {
             })
         }
     })
-    
+    const owner = await mongoUser.findById(data.owner).exec()
     const newAuction = new mongoFreshAuction({
         title: data.title,
         description: data.description,
-        objectName: data.objectName,
         startTime: data.startTime,
         endTime: data.endTime,
         images: images,
@@ -72,8 +67,7 @@ router.post('/', upload.array('images', 15), async (req, res) => {
         messages: [], // массив обьектов messages => message
         owner: data.owner, // objectId аукционера
         participants: data.participants, // Массив ObjectId
-        status: 'created',
-        log: [new log(await mongoUser.findById(data.owner).exec().Login.login, 'created an auction')]
+        log: [new log(owner.userData.Login._login, 'created an auction')]
     })
     const result = await newAuction.save()
     res.status(200).send( JSON.stringify( result ) )
@@ -116,6 +110,12 @@ router.put('/participants', async (req, res) => {
         res.sendStatus(500)
     })
     res.status(200).json(result)
+})
+
+router.get('/load/:aid/:fid', async (req, res) => {
+    const resAuction = await mongoFreshAuction.findById(req.params.aid)
+    console.log(resAuction.images[req.params.fid])
+    res.sendFile(resAuction.images[req.params.fid])
 })
 
 function delBadFile(fileName) {

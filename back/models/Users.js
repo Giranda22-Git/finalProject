@@ -13,6 +13,26 @@ const users = new mongoose.Schema({
         privilege: {
             type: String,
             required: true
+        },
+        cash: {
+            type: Number,
+            default: 0
+        },
+        freshAuctions: {
+            type: [mongoose.Schema.Types.ObjectId],
+            default: []
+        },
+        lostAuctions: {
+            type: [mongoose.Schema.Types.ObjectId],
+            default: []
+        },
+        wonAuctions: {
+            type: [mongoose.Schema.Types.ObjectId],
+            default: []
+        },
+        participatedAuctions: {
+            type: [mongoose.Schema.Types.ObjectId],
+            default: []
         }
     }
 })

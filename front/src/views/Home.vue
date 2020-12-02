@@ -4,17 +4,19 @@
       <div class="rightClick" @click="moveOnRight"></div>
       <div class="leftClick" @click="moveOnLeft"></div>
       <div class="formWrapper" ref="cube">
-        <autorization class="auth left side" @click="switchRegistration" />
-        <registration class="reg front side" />
+        <autorization @close="close" class="auth left side" />
+        <registration @close="close" class="reg front side" />
         <div class="top side"></div>
         <div class="bottom side"></div>
         <div class="back side" ></div>
         <div class="right side"></div>
       </div>
     </div>
-    <navigation @switchPage="switchPage" />
-    <aboutUs id="aboutUs" v-show="true" ref="aboutUs" />
-    <auctions id="auctions" class="auctions" ref="auctions" />
+    <navigation v-show="!isModalVisible" @switchPage="switchPage" />
+    <aboutUs v-show="!isModalVisible" id="aboutUs" class="aboutUs" ref="aboutUs" />
+    <auctions v-show="!isModalVisible" id="auctions" class="auctions" ref="auctions" />
+    <contacts v-show="!isModalVisible" id="contacts" class="contacts" ref="contacts"/>
+    <personalArea v-show="!isModalVisible" :userData="userData" id="personalArea" class="personalArea" ref="personalArea" />
   </div>
 </template>
 
@@ -24,6 +26,8 @@ import autorization from '../components/autorization'
 import navigation from '../components/navigation'
 import aboutUs from '../components/aboutUs'
 import auctions from '../components/Auctions'
+import contacts from '../components/contacts'
+import personalArea from '../components/personalArea'
 import anime from 'animejs'
 export default {
   name: 'Home',
@@ -32,13 +36,16 @@ export default {
     autorization,
     navigation,
     aboutUs,
-    auctions
+    auctions,
+    personalArea,
+    contacts
   },
   data: () => ({
-    isModalVisible: false,
+    isModalVisible: true,
     rotate: 45,
     currentPage: 'aboutUs',
     inAnimation: false,
+    userData: null,
     aboutUsPos: {
       x: '0%',
       y: '0%'
@@ -59,8 +66,13 @@ export default {
   mounted () {
     this.$refs.aboutUs.$el.style.transform = `translateX(${this.aboutUsPos.x}) translateY(${this.aboutUsPos.y})`
     this.$refs.auctions.$el.style.transform = `translateX(${this.auctionsPos.x}) translateY(${this.auctionsPos.y})`
+    this.$refs.contacts.$el.style.transform = `translateX(${this.contactsPos.x}) translateY(${this.contactsPos.y})`
+    this.$refs.personalArea.$el.style.transform = `translateX(${this.personalAreaPos.x}) translateY(${this.personalAreaPos.y})`
   },
   methods: {
+    close () {
+      this.isModalVisible = false
+    },
     switchRegistration () {
       this.$refs.cube.style.transform = 'rotateY(0deg)'
     },
@@ -106,15 +118,18 @@ export default {
 
         // switch currentPage element
         this.currentPage = nextPage
+
         anime({
           targets: `#${this.currentPage}`,
           duration: 500,
           easing: 'linear',
-          translateY: [this[`${this.currentPage}Pos`].y, this.currentPage === 'aboutUs' ? '0%' : '-100%']
+          translateY: [this[`${this.currentPage}Pos`].y, '0%']
         })
         // switch second element Position
-        if (this.currentPage === 'aboutUs') this[`${this.currentPage}Pos`].y = '0%'
-        else this[`${this.currentPage}Pos`].y = '-100%'
+        this[`${this.currentPage}Pos`].y = '0%'
+
+        // userData for new page
+        this.userData = JSON.parse(localStorage.getItem('userData'))
 
         // disable next animation if current animation no finished
         this.inAnimation = true
@@ -132,6 +147,8 @@ export default {
   .home
     min-height: 100vh !important
     background-color: #000
+    #aboutUs, #auctions, #contacts, #personalArea
+      position: absolute
     .rightClick
       width: calc( 100vw / 2 - 400px / 2 )
       height: 100%

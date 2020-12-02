@@ -12,12 +12,6 @@ const freshAuctions = new mongoose.Schema({
         min: 15,
         max: 512
     },
-    objectName: {
-        type: String,
-        required: true,
-        min: 3,
-        max: 128
-    },
     startTime: {
         type: Date,
         required: true
@@ -75,7 +69,8 @@ const freshAuctions = new mongoose.Schema({
     }, // Массив обьектов User
     status: {
         type: String,
-        enum: ['created', 'inprogress', 'finished ']
+        enum: ['created', 'inprogress', 'finished '],
+        default: 'created'
     },
     log: [Object]
 })
